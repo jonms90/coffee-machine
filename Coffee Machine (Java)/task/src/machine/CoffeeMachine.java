@@ -1,8 +1,27 @@
 package machine;
 
+import java.util.Scanner;
+
 public class CoffeeMachine {
     public static void main(String[] args) {
-        makeCoffee();
+        System.out.println("Write how many cups of coffee you will need:");
+        Scanner scanner = new Scanner(System.in);
+        int cups = scanner.nextInt();
+
+        CoffeeMachine coffeeMachine = new CoffeeMachine();
+        Ingredients ingredients = coffeeMachine.getRequiredIngredientsForCups(cups);
+        System.out.printf("For %d cups of coffee you wil need:%n", cups);
+        System.out.println(ingredients.getWater());
+        System.out.println(ingredients.getMilk());
+        System.out.println(ingredients.getCoffeeBeans());
+        //makeCoffee();
+    }
+
+    private Ingredients getRequiredIngredientsForCups(int cups) {
+        int mlWater = 200 * cups;
+        int mlMilk = 50 * cups;
+        int gramsBeans = 15 * cups;
+        return new Ingredients(mlWater, mlMilk, gramsBeans);
     }
 
     private static void makeCoffee() {
