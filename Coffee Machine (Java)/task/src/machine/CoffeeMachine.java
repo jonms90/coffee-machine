@@ -34,16 +34,17 @@ public class CoffeeMachine {
         int cups = promptInteger("Write how many cups of coffee you will need:", scanner);
         */
         CoffeeMachine coffeeMachine = new CoffeeMachine(400, 540, 120,9 ,550);
-        coffeeMachine.displaySupplies();
+        String input;
 
-        String input = prompt("Write action (buy, fill, take):");
-        switch (input) {
-            case "buy" -> coffeeMachine.buy();
-            case "fill" -> coffeeMachine.fill();
-            case "take" -> coffeeMachine.take();
-        }
-
-        coffeeMachine.displaySupplies();
+        do{
+            input = prompt("Write action (buy, fill, take, remaining, exit):");
+            switch (input) {
+                case "buy" -> coffeeMachine.buy();
+                case "fill" -> coffeeMachine.fill();
+                case "take" -> coffeeMachine.take();
+                case "remaining" -> coffeeMachine.displaySupplies();
+            };
+        } while(!"exit".equals(input));
 
         // String available = coffeeMachine.checkAvailability(cups);
         // System.out.println(available);
@@ -60,7 +61,7 @@ public class CoffeeMachine {
     }
 
     private void take() {
-        System.out.printf("I gave you $%d%n%n", _money);
+        System.out.printf("%nI gave you $%d%n%n", _money);
         _money = 0;
     }
 
@@ -72,37 +73,63 @@ public class CoffeeMachine {
     }
 
     private void buy() {
-        int order = promptInteger("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino:");
-        switch (order){
-            case 1 -> makeEspresso();
-            case 2 -> makeLatte();
-            case 3 -> makeCappuccino();
+        String order = promptf("%nWhat do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino, back - to main menu:%n");
+        if("back".equals(order)){
+            return;
         }
+
+        try{
+            switch (Integer.parseInt(order)){
+                case 1 -> makeEspresso();
+                case 2 -> makeLatte();
+                case 3 -> makeCappuccino();
+            }
+        } catch(NumberFormatException ignored){}
     }
 
     private void makeEspresso() {
-        makeBeverage(250, 0, 16);
-        _money += CostEspresso;
+        makeBeverage(250, 0, 16, CostEspresso);
     }
 
     private void makeLatte() {
-        makeBeverage(350, 75, 20);
-        _money += CostLatte;
+        makeBeverage(350, 75, 20, CostLatte);
     }
 
     private void makeCappuccino() {
-        makeBeverage(200, 100, 12);
-        _money += CostCappuccino;
+        makeBeverage(200, 100, 12, CostCappuccino);
     }
 
-    private void makeBeverage(int mlWater, int mlMilk, int gramsBeans) {
+    private void makeBeverage(int mlWater, int mlMilk, int gramsBeans, int cost) {
+        if(_mlWaterAvailable < mlWater){
+            System.out.printf("Sorry, not enough water!%n%n");
+            return;
+        }
+
+        if(_mlMilkAvailable < mlMilk){
+            System.out.printf("Sorry, not enough milk!%n%n");
+            return;
+        }
+
+        if(_gramsBeansAvailable < gramsBeans){
+            System.out.printf("Sorry, not enough coffee beans!%n%n");
+            return;
+        }
+
+        if(_disposableCupsAvailable < 1){
+            System.out.printf("Sorry, not enough disposable cups!%n%n");
+            return;
+        }
+
+        System.out.printf("I have enough resources, making you a coffee!%n%n");
         _mlWaterAvailable -= mlWater;
         _mlMilkAvailable -= mlMilk;
         _gramsBeansAvailable -= gramsBeans;
         _disposableCupsAvailable--;
+        _money += cost;
     }
 
     private void displaySupplies() {
+        System.out.println();
         System.out.println("The coffe machine has:");
         System.out.printf("%d ml of water%n", _mlWaterAvailable);
         System.out.printf("%d ml of milk%n", _mlMilkAvailable);
@@ -114,6 +141,11 @@ public class CoffeeMachine {
 
     private static String prompt(String prompt) {
         System.out.println(prompt);
+        return _scanner.nextLine();
+    }
+
+    private static String promptf(String prompt) {
+        System.out.printf(prompt);
         return _scanner.nextLine();
     }
 
