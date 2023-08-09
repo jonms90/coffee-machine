@@ -6,9 +6,6 @@ public class CoffeeMachine {
     private static final int WATER_PER_CUP = 200;
     private static final int MILK_PER_CUP = 50;
     private static final int COFFEE_BEANS_PER_CUP = 15;
-    private static final int COST_ESPRESSO = 4;
-    private static final int COST_LATTE = 7;
-    private static final int COST_CAPPUCCINO = 6;
 
     private static final Scanner _scanner = new Scanner(System.in);
 
@@ -88,15 +85,15 @@ public class CoffeeMachine {
     }
 
     private void makeEspresso() {
-        makeBeverage(250, 0, 16, COST_ESPRESSO);
+        makeBeverage(250, 0, 16, CoffeeMenu.COST_ESPRESSO);
     }
 
     private void makeLatte() {
-        makeBeverage(350, 75, 20, COST_LATTE);
+        makeBeverage(350, 75, 20, CoffeeMenu.COST_LATTE);
     }
 
     private void makeCappuccino() {
-        makeBeverage(200, 100, 12, COST_CAPPUCCINO);
+        makeBeverage(200, 100, 12, CoffeeMenu.COST_CAPPUCCINO);
     }
 
     private void makeBeverage(int mlWater, int mlMilk, int gramsBeans, int cost) {
