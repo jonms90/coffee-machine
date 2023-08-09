@@ -3,24 +3,149 @@ package machine;
 import java.util.Scanner;
 
 public class CoffeeMachine {
-    public static void main(String[] args) {
-        System.out.println("Write how many cups of coffee you will need:");
-        Scanner scanner = new Scanner(System.in);
-        int cups = scanner.nextInt();
+    private static final int WaterPerCup = 200;
+    private static final int MilkPerCup = 50;
+    private static final int CoffeeBeansPerCup = 15;
+    private static final int CostEspresso = 4;
+    private static final int CostLatte = 7;
+    private static final int CostCappuccino = 6;
 
-        CoffeeMachine coffeeMachine = new CoffeeMachine();
+    private static final Scanner _scanner = new Scanner(System.in);
+
+    private int _mlWaterAvailable;
+    private int _mlMilkAvailable;
+    private int _gramsBeansAvailable;
+    private int _money;
+    private int _disposableCupsAvailable;
+
+    public CoffeeMachine(int mlWater, int mlMilk, int gramsBeans, int disposableCupsAvailable, int money){
+        _mlWaterAvailable = mlWater;
+        _mlMilkAvailable = mlMilk;
+        _gramsBeansAvailable = gramsBeans;
+        _disposableCupsAvailable = disposableCupsAvailable;
+        _money = money;
+    }
+
+    public static void main(String[] args) {
+        /*
+        int initialWater = promptInteger("Write how many ml of water the coffee machine has:", scanner);
+        int initialMilk = promptInteger("Write how many ml of milk the coffee machine has:", scanner);
+        int initialBeans = promptInteger("Write how many grams of coffee beans the coffee machine has:", scanner);
+        int cups = promptInteger("Write how many cups of coffee you will need:", scanner);
+        */
+        CoffeeMachine coffeeMachine = new CoffeeMachine(400, 540, 120,9 ,550);
+        coffeeMachine.displaySupplies();
+
+        String input = prompt("Write action (buy, fill, take):");
+        switch (input) {
+            case "buy" -> coffeeMachine.buy();
+            case "fill" -> coffeeMachine.fill();
+            case "take" -> coffeeMachine.take();
+        }
+
+        coffeeMachine.displaySupplies();
+
+        // String available = coffeeMachine.checkAvailability(cups);
+        // System.out.println(available);
+
+        /*
         Ingredients ingredients = coffeeMachine.getRequiredIngredientsForCups(cups);
         System.out.printf("For %d cups of coffee you wil need:%n", cups);
-        System.out.println(ingredients.getWater());
-        System.out.println(ingredients.getMilk());
-        System.out.println(ingredients.getCoffeeBeans());
+        System.out.println(ingredients.printWater());
+        System.out.println(ingredients.printMilk());
+        System.out.println(ingredients.printCoffeeBeans());
+        */
+
         //makeCoffee();
     }
 
+    private void take() {
+        System.out.printf("I gave you $%d%n%n", _money);
+        _money = 0;
+    }
+
+    private void fill() {
+        _mlWaterAvailable += promptInteger("Write how many ml of water you want to add:");
+        _mlMilkAvailable += promptInteger("Write how many ml of milk you want to add:");
+        _gramsBeansAvailable += promptInteger("Write how many grams of coffee beans you want to add:");
+        _disposableCupsAvailable += promptInteger("Write how many disposable cups you want to add:");
+    }
+
+    private void buy() {
+        int order = promptInteger("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino:");
+        switch (order){
+            case 1 -> makeEspresso();
+            case 2 -> makeLatte();
+            case 3 -> makeCappuccino();
+        }
+    }
+
+    private void makeEspresso() {
+        makeBeverage(250, 0, 16);
+        _money += CostEspresso;
+    }
+
+    private void makeLatte() {
+        makeBeverage(350, 75, 20);
+        _money += CostLatte;
+    }
+
+    private void makeCappuccino() {
+        makeBeverage(200, 100, 12);
+        _money += CostCappuccino;
+    }
+
+    private void makeBeverage(int mlWater, int mlMilk, int gramsBeans) {
+        _mlWaterAvailable -= mlWater;
+        _mlMilkAvailable -= mlMilk;
+        _gramsBeansAvailable -= gramsBeans;
+        _disposableCupsAvailable--;
+    }
+
+    private void displaySupplies() {
+        System.out.println("The coffe machine has:");
+        System.out.printf("%d ml of water%n", _mlWaterAvailable);
+        System.out.printf("%d ml of milk%n", _mlMilkAvailable);
+        System.out.printf("%d g of coffee beans%n", _gramsBeansAvailable);
+        System.out.printf("%d disposable cups%n", _disposableCupsAvailable);
+        System.out.printf("$%d of money%n", _money);
+        System.out.println();
+    }
+
+    private static String prompt(String prompt) {
+        System.out.println(prompt);
+        return _scanner.nextLine();
+    }
+
+    private String checkAvailability(int cups) {
+        int maxCupsAvailable = getMaxCupsAvailable();
+        if(maxCupsAvailable > cups){
+            int extraCups = maxCupsAvailable - cups;
+            return String.format("Yes, I can make that amount of coffee (and even %d more than that)", extraCups);
+        }
+        else if(maxCupsAvailable == cups){
+            return "Yes, I can make that amount of coffee";
+        }
+
+        return String.format("No, I can make only %d cup(s) of coffee", maxCupsAvailable);
+    }
+
+    private int getMaxCupsAvailable() {
+        int maxCupsFromWater = _mlWaterAvailable / WaterPerCup;
+        int maxCupsFromMilk = _mlMilkAvailable / MilkPerCup;
+        int maxCupsFromBeans = _gramsBeansAvailable / CoffeeBeansPerCup;
+        return Math.min(maxCupsFromWater, Math.min(maxCupsFromMilk, maxCupsFromBeans));
+    }
+
+    private static int promptInteger(String x) {
+        System.out.println(x);
+        return _scanner.nextInt();
+    }
+
     private Ingredients getRequiredIngredientsForCups(int cups) {
-        int mlWater = 200 * cups;
-        int mlMilk = 50 * cups;
-        int gramsBeans = 15 * cups;
+        int mlWater = WaterPerCup * cups;
+        int mlMilk = MilkPerCup * cups;
+        int gramsBeans = CoffeeBeansPerCup * cups;
         return new Ingredients(mlWater, mlMilk, gramsBeans);
     }
 

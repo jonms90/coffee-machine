@@ -12,15 +12,19 @@ public class Ingredients {
         _gramsBeans = gramsBeans;
     }
 
-    public String getWater() {
+    public int getWater(){ return _mlWater; };
+    public int getMilk(){ return _mlMilk; };
+    public int getCoffeeBeans(){ return _gramsBeans; };
+
+    public String printWater() {
         return String.format("%d ml of water", _mlWater);
     }
 
-    public String getMilk() {
+    public String printMilk() {
         return String.format("%d ml of milk", _mlMilk);
     }
 
-    public String getCoffeeBeans() {
+    public String printCoffeeBeans() {
         return String.format("%d g of coffee beans", _gramsBeans);
     }
 }
