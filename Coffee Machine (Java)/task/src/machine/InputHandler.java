@@ -49,7 +49,7 @@ public class InputHandler {
                 return CoffeeMachineState.MAIN_MENU;
             }
             case "remaining" -> {
-                _display.displaySupplies(resources);
+                _display.supplies(resources);
                 return CoffeeMachineState.MAIN_MENU;
             }
             default -> {return CoffeeMachineState.MAIN_MENU;}
@@ -97,7 +97,7 @@ public class InputHandler {
     }
 
     private void take(Resources resources) {
-        System.out.printf("%nI gave you $%d%n%n", resources.getMoney());
+        _display.deposit(resources.getMoney());
         resources.TakeMoney();
     }
 
@@ -115,26 +115,26 @@ public class InputHandler {
 
     private void makeBeverage(Resources resources, int mlWater, int mlMilk, int gramsBeans, int cost) {
         if(resources.getWater() < mlWater){
-            System.out.printf("Sorry, not enough water!%n%n");
+            _display.insufficientWater();
             return;
         }
 
         if(resources.getMilk() < mlMilk){
-            System.out.printf("Sorry, not enough milk!%n%n");
+            _display.insuffientMilk();
             return;
         }
 
         if(resources.getCoffeeBeans() < gramsBeans){
-            System.out.printf("Sorry, not enough coffee beans!%n%n");
+            _display.insufficientCoffeeBeans();
             return;
         }
 
         if(resources.getDisposableCups() < 1){
-            System.out.printf("Sorry, not enough disposable cups!%n%n");
+            _display.insufficientCups();
             return;
         }
 
-        System.out.printf("I have enough resources, making you a coffee!%n%n");
+        _display.availableResources();
         consumeResources(resources, mlWater, mlMilk, gramsBeans);
         resources.addMoney(cost);
     }
