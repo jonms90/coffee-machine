@@ -3,12 +3,12 @@ package machine;
 import java.util.Scanner;
 
 public class CoffeeMachine {
-    private static final int WaterPerCup = 200;
-    private static final int MilkPerCup = 50;
-    private static final int CoffeeBeansPerCup = 15;
-    private static final int CostEspresso = 4;
-    private static final int CostLatte = 7;
-    private static final int CostCappuccino = 6;
+    private static final int WATER_PER_CUP = 200;
+    private static final int MILK_PER_CUP = 50;
+    private static final int COFFEE_BEANS_PER_CUP = 15;
+    private static final int COST_ESPRESSO = 4;
+    private static final int COST_LATTE = 7;
+    private static final int COST_CAPPUCCINO = 6;
 
     private static final Scanner _scanner = new Scanner(System.in);
 
@@ -88,15 +88,15 @@ public class CoffeeMachine {
     }
 
     private void makeEspresso() {
-        makeBeverage(250, 0, 16, CostEspresso);
+        makeBeverage(250, 0, 16, COST_ESPRESSO);
     }
 
     private void makeLatte() {
-        makeBeverage(350, 75, 20, CostLatte);
+        makeBeverage(350, 75, 20, COST_LATTE);
     }
 
     private void makeCappuccino() {
-        makeBeverage(200, 100, 12, CostCappuccino);
+        makeBeverage(200, 100, 12, COST_CAPPUCCINO);
     }
 
     private void makeBeverage(int mlWater, int mlMilk, int gramsBeans, int cost) {
@@ -163,9 +163,9 @@ public class CoffeeMachine {
     }
 
     private int getMaxCupsAvailable() {
-        int maxCupsFromWater = _mlWaterAvailable / WaterPerCup;
-        int maxCupsFromMilk = _mlMilkAvailable / MilkPerCup;
-        int maxCupsFromBeans = _gramsBeansAvailable / CoffeeBeansPerCup;
+        int maxCupsFromWater = _mlWaterAvailable / WATER_PER_CUP;
+        int maxCupsFromMilk = _mlMilkAvailable / MILK_PER_CUP;
+        int maxCupsFromBeans = _gramsBeansAvailable / COFFEE_BEANS_PER_CUP;
         return Math.min(maxCupsFromWater, Math.min(maxCupsFromMilk, maxCupsFromBeans));
     }
 
@@ -175,9 +175,9 @@ public class CoffeeMachine {
     }
 
     private Ingredients getRequiredIngredientsForCups(int cups) {
-        int mlWater = WaterPerCup * cups;
-        int mlMilk = MilkPerCup * cups;
-        int gramsBeans = CoffeeBeansPerCup * cups;
+        int mlWater = WATER_PER_CUP * cups;
+        int mlMilk = MILK_PER_CUP * cups;
+        int gramsBeans = COFFEE_BEANS_PER_CUP * cups;
         return new Ingredients(mlWater, mlMilk, gramsBeans);
     }
 
